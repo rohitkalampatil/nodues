@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*"  %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -164,10 +165,7 @@
 
         <div id="sub-nav">
             <a href="Student_NoDues.jsp" class="active">My No Dues</a>
-            <%-- 
-            <a href="department_Account.jsp">Department 1</a>
-            <a href="department_Library.jsp">Department 2</a>
-            --%>
+
         </div>
 
         <table id="no-dues-table">
@@ -180,6 +178,24 @@
                 </tr>
             </thead>
             <tbody>
+                <%
+                Statement st;
+                Connection c1;
+                try{
+                    Class.forName("com.mysql.jdbc.Driver");
+                    c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseclearance","root","root");
+                    st  = c1.createStatement();
+                    String q = "select * from noduse where  prn="+session.getAttribute("prn");
+                    ResultSet r = st.executeQuery(q);
+                    if(r.next()){
+                        String library = r.getString("libraryStatus");
+                    }
+                    
+                }
+                catch(Exception  e){
+                    
+                }
+                %>
                 <tr>
                     <td>Library</td>
                     <td class="status-check"><div class="checked">&#10004;</div></td>
