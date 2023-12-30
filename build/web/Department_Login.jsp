@@ -1,5 +1,6 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*"  %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -82,7 +83,7 @@
                 margin-right: 12px;
                 opacity: 60%;
             }
-           
+
             #password {
                 width: calc(100% - 30px); /* Adjusted width to accommodate the eye icon */
                 padding: 10px;
@@ -105,10 +106,24 @@
                 <div class="form-group">
                     <label for="department">Department:</label>
                     <select id="department" name="department" required>
-                        <option value="">Select Department</option>
-                        <option value="computer">Computer Science</option>
-                        <option value="civil">Civil</option>
-                        <!-- Add more departments as needed -->
+                        <%
+                            Statement st;
+                            Connection c1;
+                            try {
+                                Class.forName("com.mysql.jdbc.Driver");
+                                c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseclearance", "root", "root");
+                                st = c1.createStatement();
+
+                                ResultSet r = st.executeQuery("select departmentName from department;");
+                                while (r.next()) {
+                        %>
+                        <option value="<%= r.getString("departmentName")%>"><%= r.getString("departmentName")%></option>
+                        <%
+                                }
+                            } catch (Exception e) {
+
+                            }
+                        %>
                     </select>
                 </div>
 
