@@ -1,3 +1,4 @@
+<%@page import="java.util.Objects"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*"  %>
 <!DOCTYPE html>
@@ -98,15 +99,16 @@
 
             .status-check .checked,
             .status-check .unchecked,
-            .status-check .na {
-                width: 20px;
-                height: 20px;
+            .status-check .allot,
+            .status-check .pending{
+                width: 30px;
+                height: 30px;
                 border-radius: 50%;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
                 color: #fff;
-                font-size: 14px;
+                font-size: 24px;
             }
 
             .checked {
@@ -117,10 +119,20 @@
                 background-color: #DC3545; /* Red */
             }
 
-            .na {
+            .allot {
                 background-color: #808080; /* Gray */
             }
+            .pending{
+                background-color: #007BFF; 
 
+            }
+            .note{
+                margin-top: 80px;
+                padding-left: 25%;
+                padding-right: 25%;
+                display: flex;
+                justify-content: space-between;
+            }
             .remark-input {
                 width: 95%;
                 padding: 8px;
@@ -179,49 +191,171 @@
             </thead>
             <tbody>
                 <%
-                Statement st;
-                Connection c1;
-                try{
-                    Class.forName("com.mysql.jdbc.Driver");
-                    c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseclearance","root","root");
-                    st  = c1.createStatement();
-                    String q = "select * from noduse where  prn="+session.getAttribute("prn");
-                    ResultSet r = st.executeQuery(q);
-                    if(r.next()){
-                        String library = r.getString("libraryStatus");
-                    }
-                    
-                }
-                catch(Exception  e){
-                    
-                }
+                    Statement st;
+                    Connection c1;
+                    try {
+                        Class.forName("com.mysql.jdbc.Driver");
+                        c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseclearance", "root", "root");
+                        st = c1.createStatement();
+                        String q = "select * from noduse where  prn=" + session.getAttribute("prn");
+                        ResultSet r = st.executeQuery(q);
+                        
+                        if (r.next()) {
+
+                            if (!Objects.equals(r.getString("libraryStatus"), "NA")) {
                 %>
-                <tr>
-                    <td>Library</td>
-                    <td class="status-check"><div class="checked">&#10004;</div></td>
-                    <td><input type="text" class="remark-input" readonly value="Nill"></td>
-                    <td><button class="login-button">Verify</button></td>
-                </tr>
-                <tr>
-                    <td>Account</td>
-                    <td class="status-check"><div class="unchecked">&#10008;</div></td>
-                    <td><input type="text" class="remark-input" readonly value="Pending Dues"></td>
-                    <td><button class="login-button">Verify</button></td>
-                </tr>
-                <tr>
-                    <td>Hostel</td>
-                    <td class="status-check"><div class="checked">&#10004;</div></td>
-                    <td><input type="text" class="remark-input" readonly value="Nill"></td>
-                    <td><button class="login-button">Verify</button></td>
-                </tr>
-                <tr>
-                    <td>Laboratory</td>
-                    <td class="status-check"><div class="checked">&#10004;</div></td>
-                    <td><input type="text" class="remark-input" readonly value="Nill"></td>
-                    <td><button class="login-button">Verify</button></td>
-                </tr>
-                <!-- Add more rows as needed -->
+                        <tr>
+                            <td>Library</td>
+                <%
+                                if (Objects.equals(r.getString("libraryStatus"), "allot")) {
+                %>
+                                    <td class="status-check"><div class="allot">&#10004;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Click Vrify to Clearance"></td>
+                                    <td><button class="login-button">Verify</button></td>
+                <%
+                                }else if (Objects.equals(r.getString("libraryStatus"),"pending")){
+                %>
+                                    <td class="status-check"><div class="pending">&#10004;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Request is Pending"></td>
+                                    <td class="status-check"></td>
+                <%   
+                                }else if (Objects.equals(r.getString("libraryStatus"),"approve")) {
+                %>
+                                    <td class="status-check"><div class="checked">&#10004;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Nill"></td>
+                                    <td class="status-check"></td>
+                <%
+                                }else{
+                %>
+                                    <td class="status-check"><div class="unchecked">&#10008;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Pending Dues"></td>
+                                    <td><button class="login-button">Verify</button></td>
+                <%
+                                }
+                %>
+                        </tr>
+                <%
+                            }
+                            if (!Objects.equals(r.getString("accountStatus"), "NA")) {
+                %>
+                        <tr>
+                            <td>Account</td>
+                <%
+                                if (Objects.equals(r.getString("accountStatus"), "allot")) {
+                %>
+                                    <td class="status-check"><div class="allot">&#10004;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Click Vrify to Clearance"></td>
+                                    <td><button class="login-button">Verify</button></td>
+                <%
+                                }else if (Objects.equals(r.getString("accountStatus"),"pending")){
+                %>
+                                    <td class="status-check"><div class="pending">&#10004;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Request is Pending"></td>
+                                    <td class="status-check"></td>
+                <%   
+                                }else if (Objects.equals(r.getString("accountStatus"),"approve")) {
+                %>
+                                    <td class="status-check"><div class="checked">&#10004;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Nill"></td>
+                                    <td class="status-check"></td>
+                <%
+                                }else{
+                %>
+                                    <td class="status-check"><div class="unchecked">&#10008;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Pending Dues"></td>
+                                    <td><button class="login-button">Verify</button></td>
+                <%
+                                }
+                %>
+                        </tr>
+                <%
+                            }
+                            if (!Objects.equals(r.getString("hostelStatus"), "NA")) {
+                %>
+                        <tr>
+                            <td>Hostel Department</td>
+                <%
+                                if (Objects.equals(r.getString("hostelStatus"), "allot")) {
+                %>
+                                    <td class="status-check"><div class="allot">&#10004;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Click Vrify to Clearance"></td>
+                                    <td><button class="login-button">Verify</button></td>
+                <%
+                                }else if (Objects.equals(r.getString("hostelStatus"),"pending")){
+                %>
+                                    <td class="status-check"><div class="pending">&#10004;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Request is Pending"></td>
+                                    <td class="status-check"></td>
+                <%   
+                                }else if (Objects.equals(r.getString("hostelStatus"),"approve")) {
+                %>
+                                    <td class="status-check"><div class="checked">&#10004;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Nill"></td>
+                                    <td class="status-check"></td>
+                <%
+                                }else{
+                %>
+                                    <td class="status-check"><div class="unchecked">&#10008;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Pending Dues"></td>
+                                    <td><button class="login-button">Verify</button></td>
+                <%
+                                }
+                %>
+                        </tr>
+                <%
+                            }
+                            if (!Objects.equals(r.getString("laboratoryStatus"), "NA")) {
+                %>
+                        <tr>
+                            <td>Laboratory Department</td>
+                <%
+                                if (Objects.equals(r.getString("laboratoryStatus"), "allot")) {
+                %>
+                                    <td class="status-check"><div class="allot">&#10004;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Click Vrify to Clearance"></td>
+                                    <td><button class="login-button">Verify</button></td>
+                <%
+                                }else if (Objects.equals(r.getString("laboratoryStatus"),"pending")){
+                %>
+                                    <td class="status-check"><div class="pending">&#10004;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Request is Pending"></td>
+                                    <td class="status-check"></td>
+                <%   
+                                }else if (Objects.equals(r.getString("laboratoryStatus"),"approve")) {
+                %>
+                                    <td class="status-check"><div class="checked">&#10004;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Nill"></td>
+                                    <td class="status-check"></td>
+                <%
+                                }else{
+                %>
+                                    <td class="status-check"><div class="unchecked">&#10008;</div></td>
+                                    <td><input type="text" class="remark-input" readonly value="Pending Dues"></td>
+                                    <td><button class="login-button">Verify</button></td>
+                <%
+                                }
+                %>
+                        </tr>
+                <%
+                            }
+                        }else{
+                            response.sendRedirect("Student_Login.jsp");
+                            c1.close();
+                        }
+                        c1.close();
+
+                    } catch (Exception e) {
+
+                    }
+                %>
+
             </tbody>
         </table>
+                <div class="note">Note :
+                    <div class="status-check"><div class="allot">&#10004;</div>Allotted</div>
+                    <div class="status-check"><div class="unchecked">&#10008;</div>Rejected</div>
+                    <div class="status-check"><div class="checked">&#10004;</div>Approved</div>
+                    <div class="status-check"><div class="pending">&#10004;</div>Pending</div>
+                </div>
     </body>
 </html>
