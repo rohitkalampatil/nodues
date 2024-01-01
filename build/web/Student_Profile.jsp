@@ -177,6 +177,7 @@
                 ResultSet r = st.executeQuery("select * from students where prn="+session.getAttribute("prn"));
                 if(r.next()){
                     username = r.getString("name");
+                    Long prn = r.getLong("prn");
                     
                 }
             }catch(Exception e){
