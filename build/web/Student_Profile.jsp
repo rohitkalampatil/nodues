@@ -1,9 +1,12 @@
+<%@page import="java.sql.*"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.Statement"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Profile</title>
+        <title>No Dues Clearance | Profile</title>
             <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -104,6 +107,8 @@
         }
 
         #profile-info {
+            display: flex;
+            gap:10px;
             margin-bottom: 20px;
         }
 
@@ -155,7 +160,30 @@
 </head>
 
 <body>
-
+    <%
+            // can not store user data on this page ie to prevent back after logout
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            if (session.getAttribute("prn") == null) {
+                //checking only prn cause if prn gets nulll it will not check further for true
+                response.sendRedirect("Student_Login.jsp");
+            }else{
+            Statement st;
+            Connection c1;
+            String username="";
+            try{
+                Class.forName("com.mysql.jdbc.Driver");
+                c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseclearance","root","root");
+                st = c1.createStatement();
+                ResultSet r = st.executeQuery("select * from students where prn="+session.getAttribute("prn"));
+                if(r.next()){
+                    username = r.getString("name");
+                    
+                }
+            }catch(Exception e){
+                
+            }
+            
+        %>
     <div id="navbar">
         <div id="logo">No Dues Clearance</div>
         <div id="nav-links">
@@ -171,8 +199,10 @@
         <div id="left-aside">
             <div id="profile-info">
                 <img src="profile-icon.png" alt="Profile Image" width="50" height="50">
-                <span>User Name</span>
+                <div><span style="margin-top: 10px;"><strong><%= username %></strong></span>
+                <br><span >43434</span></div>
             </div>
+                <hr>
         </div>
         <div id="right-aside">
             <div id="update-form">
@@ -195,4 +225,5 @@
 
 
     </body>
+    <%}%>
 </html>

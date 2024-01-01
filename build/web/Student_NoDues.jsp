@@ -160,7 +160,6 @@
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
             if (session.getAttribute("prn") == null) {
                 //checking only prn cause if prn gets nulll it will not check further for true
-
                 response.sendRedirect("Student_Login.jsp");
             }
         %>

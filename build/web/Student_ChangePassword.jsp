@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>No Dues Clearance | Change password</title>
         <style>
             body {
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -155,7 +155,14 @@
     </head>
 
     <body>
-
+        <%
+            // can not store user data on this page ie to prevent back after logout
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            if (session.getAttribute("prn") == null) {
+                //checking only prn cause if prn gets nulll it will not check further for true
+                response.sendRedirect("Student_Login.jsp");
+            }
+        %>
         <div id="navbar">
             <div id="logo">No Dues Clearance</div>
             <div id="nav-links">
