@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.sql.*"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -104,6 +105,8 @@
             }
 
             #profile-info {
+                display: flex;
+                gap: 10px;
                 margin-bottom: 20px;
             }
 
@@ -161,12 +164,35 @@
             if (session.getAttribute("prn") == null) {
                 //checking only prn cause if prn gets nulll it will not check further for true
                 response.sendRedirect("Student_Login.jsp");
-            }
+            } else {
+                Statement st;
+                Connection c1;
+                String username = "", email = "", address = "", department = "";
+                //default value for long
+                Long prn = 0l, mobile = 0l;
+                try {
+                    Class.forName("com.mysql.jdbc.Driver");
+                    c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseclearance", "root", "root");
+                    st = c1.createStatement();
+                    ResultSet r = st.executeQuery("select * from students where prn=" + session.getAttribute("prn"));
+                    if (r.next()) {
+                        username = r.getString("name");
+                        prn = r.getLong("prn");
+                        email = r.getString("email");
+                        mobile = r.getLong("mobile");
+                        address = r.getString("Address");
+                        department = r.getString("department");
+
+                    }
+                } catch (Exception e) {
+
+                }
+
         %>
         <div id="navbar">
             <div id="logo">No Dues Clearance</div>
             <div id="nav-links">
-                
+
                 <a href="Student_Profile.jsp">My Profile</a>
                 <a href="Student_NoDues.jsp">My NoDues</a>
                 <a href="Student_ChangePassword.jsp">Change Password</a>
@@ -178,13 +204,24 @@
             <div id="left-aside">
                 <div id="profile-info">
                     <img src="profile-icon.png" alt="Profile Image" width="50" height="50">
-                    <span>User Name</span>
+                    <div><span style="margin-top: 10px;"><strong style="font-size: 26px"><%= username%></strong></span>
+                        <br><span style="font-size: 13px" ><%= email%></span></div>
                 </div>
+                <hr>
+                <div style="padding: 20px;">
+                    <span style="font-size: 20px">PRN :-<%= " " + prn%></span>
+                    <br><br>
+                    <span style="font-size: 20px">Mobile :-<%= " " + mobile%></span>
+                    <br><br>
+                    <span style="font-size: 20px">Address :-<%= " " + address%></span>
+                    <br><br>
+                    <span style="font-size: 20px">PRN :-<%= " " + department%></span>
+                </div>    
             </div>
             <div id="right-aside">
                 <div id="change-password-form">
                     <h2>Change Password</h2>
-                    <form>
+                    <form action="Student_Changepass" method="POST">
                         <label for="current-password">Current Password:</label>
                         <input type="password" id="current-password" name="current-password">
 
@@ -194,7 +231,7 @@
                         <label for="confirm-password">Confirm Password:</label>
                         <input type="password" id="confirm-password" name="confirm-password">
 
-                        <button type="button">Change Password</button>
+                        <button type="submit">Change Password</button>
                     </form>
                 </div>
             </div>
@@ -202,4 +239,5 @@
 
 
     </body>
+    <%}%>
 </html>

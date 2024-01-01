@@ -169,7 +169,9 @@
             }else{
             Statement st;
             Connection c1;
-            String username="";
+            String username="",email="",address="",department="";
+            //default value for long
+            Long prn = 0l,mobile=0l;
             try{
                 Class.forName("com.mysql.jdbc.Driver");
                 c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseclearance","root","root");
@@ -177,7 +179,11 @@
                 ResultSet r = st.executeQuery("select * from students where prn="+session.getAttribute("prn"));
                 if(r.next()){
                     username = r.getString("name");
-                    Long prn = r.getLong("prn");
+                    prn = r.getLong("prn");
+                    email = r.getString("email");
+                    mobile = r.getLong("mobile");
+                    address = r.getString("Address");
+                    department = r.getString("department");
                     
                 }
             }catch(Exception e){
@@ -200,25 +206,34 @@
         <div id="left-aside">
             <div id="profile-info">
                 <img src="profile-icon.png" alt="Profile Image" width="50" height="50">
-                <div><span style="margin-top: 10px;"><strong><%= username %></strong></span>
-                <br><span >43434</span></div>
+                <div><span style="margin-top: 10px;"><strong style="font-size: 26px"><%= username %></strong></span>
+                    <br><span style="font-size: 13px" ><%= email %></span></div>
             </div>
                 <hr>
+                <div style="padding: 20px;">
+                    <span style="font-size: 20px">PRN :-<%= " "+prn %></span>
+                    <br><br>
+                    <span style="font-size: 20px">Mobile :-<%= " "+mobile %></span>
+                    <br><br>
+                    <span style="font-size: 20px">Address :-<%= " "+address %></span>
+                    <br><br>
+                    <span style="font-size: 20px">PRN :-<%= " "+department %></span>
+                </div>    
         </div>
         <div id="right-aside">
             <div id="update-form">
                 <h2>Update Information</h2>
-                <form>
+                <form action="Student_Update" method="POST">
                     <label for="contact">Contact:</label>
-                    <input type="text" id="contact" name="contact">
+                    <input type="text" required="" maxlength="10" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" id="contact" name="contact" value="<%= mobile %>">
 
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email">
+                    <input type="email" id="email" name="email" value="<%= email %>" required="">
 
                     <label for="address">Address:</label>
-                    <input type="text" id="address" name="address">
+                    <input type="text" id="address" name="address" value="<%= address %>"required>
 
-                    <button type="button">Update</button>
+                    <button type="submit">Update</button>
                 </form>
             </div>
         </div>
