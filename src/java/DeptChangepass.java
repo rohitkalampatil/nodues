@@ -54,25 +54,30 @@ public class DeptChangepass extends HttpServlet {
                                     response.sendRedirect("Department_ChangePassword.jsp");
                                 }
                             } else {
-                                                                
+                                c1.close();
                                 session.setAttribute("error", "New Password and Confirm Password missmatched");
                                 response.sendRedirect("Department_ChangePassword.jsp");
                             }
                         } else {
-                            
+                            c1.close();
                             session.setAttribute("error", "password must minimum 4 or max 8 charecter long");
                             response.sendRedirect("Department_ChangePassword.jsp");
                         }
                     } else {
-                        
+                        c1.close();
                         session.setAttribute("error", "Wrong Old Password");
                         response.sendRedirect("Department_ChangePassword.jsp");
                     }
                 }
             } catch (Exception e) {
-                session.setAttribute("status", "failed");                
-                response.sendRedirect("Department_Login.jsp");
-                out.print(e);
+                try {
+                    c1.close();
+                    session.setAttribute("status", "failed");
+                    response.sendRedirect("Department_Login.jsp");
+                } catch (SQLException ex) {
+                    Logger.getLogger(DeptChangepass.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             }
         }
     }

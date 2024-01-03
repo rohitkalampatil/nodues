@@ -230,13 +230,35 @@
 
                         <label for="confirm-password">Confirm Password:</label>
                         <input type="password" id="confirm-password" name="confirm-password">
+                        <span id="error"><%= session.getAttribute("error") == null ? "" : session.getAttribute("error")%></span>
 
                         <button type="submit">Change Password</button>
                     </form>
                 </div>
             </div>
         </div>
+        <script >
 
+            function alertNamefun() {
+        var status = '<%= session.getAttribute("status")%>';
+
+                setTimeout(fundiss, 3000);
+                function fundiss() {
+            document.getElementById("error").innerHTML = '<% session.setAttribute("error", "");%>';
+                }
+                if (status === "success") {
+                    alert("Password Changed Successfully")
+                }
+                if (status === "failed") {
+                    alert("failed to set New Password");
+                }
+            }
+        </script>
+        <script>
+            window.onload = alertNamefun;
+        </script>
+        <% session.setAttribute("status", null);%>
+        <% session.setAttribute("error", null);%>
 
     </body>
     <%}%>
