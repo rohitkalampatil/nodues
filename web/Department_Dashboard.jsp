@@ -1,4 +1,5 @@
 
+<%@page import="java.sql.*"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -87,7 +88,7 @@
                 margin-bottom: 20px;
             }
 
-            #search-input {
+            #searchInput {
                 flex-grow: 1;
                 padding: 8px;
                 border: 1px solid #ccc;
@@ -171,7 +172,7 @@
             <div id="options">
                 <a href="Department_AddStudent.jsp">Add Student</a>
                 <a href="Department_ViewStudent.jsp">View Student</a>
-                
+
                 <a href="Department_ChangePassword.jsp">Change Password</a>
                 <a href="Logout">Logout</a>
             </div>
@@ -190,10 +191,10 @@
                 </div>
                 <div id="right-aside">
                     <div id="search-bar">
-                        <input type="text" placeholder="Search..." id="search-input">
-                        <button id="search-button" onclick="search()">Search</button>
+                        <input type="text" placeholder="Search..." id="searchInput">
+                        
                     </div>
-                    <table>
+                    <table id="dataTable">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -205,17 +206,64 @@
                             </tr>
                         </thead>
                         <tbody>
+
+                            <%
+                                // Database connection parameters
+                                String url = "jdbc:mysql://localhost:3306/noduseclearance";
+                                String username = "root";
+                                String password = "root";
+
+                                try {
+                                    // Load the JDBC driver
+                                    Class.forName("com.mysql.jdbc.Driver");
+
+                                    // Establish a connection
+                                    Connection connection = DriverManager.getConnection(url, username, password);
+
+                                    String dprtSts = "";
+                                    if (session.getAttribute("department").equals("account")) {
+                                        dprtSts = "accountStatus";
+                                    } else if (session.getAttribute("department").equals("library")) {
+                                        dprtSts = "libraryStatus";
+                                    } else if (session.getAttribute("department").equals("laboratory")) {
+                                        dprtSts = "laboratoryStatus";
+                                    } else if (session.getAttribute("department").equals("hostel")) {
+                                        dprtSts = "hostelStatus";
+                                    }
+                                    session.setAttribute("dprtSts", dprtSts);
+                                    // Create a statement for noduse table
+                                    Statement noduseStatement = connection.createStatement();
+                                    ResultSet noduseResultSet = noduseStatement.executeQuery("SELECT * FROM noduse where " + dprtSts + "='pending'");
+                                    // Display the data in an HTML table
+                                    Statement studentsStatement = connection.createStatement();
+                                    while (noduseResultSet.next()) {
+
+                                        ResultSet studentsResultSet = studentsStatement.executeQuery("SELECT * FROM students where prn=" + noduseResultSet.getLong("prn"));
+
+                                        if (studentsResultSet.next()) {
+
+                            %>
                             <tr>
-                                <td>John Doe</td>
-                                <td>12345</td>
-                                <td>123-456-7890</td>
-                                <td>john.doe@example.com</td>
-                                <td>Null</td>
+                                <td><%= studentsResultSet.getString("name")%></td>
+                                <td><%= studentsResultSet.getLong("prn")%></td>
+                                <td><%= studentsResultSet.getLong("mobile")%></td>
+                                <td><%= studentsResultSet.getString("email")%></td>
+                                <td><%= noduseResultSet.getString(dprtSts)%></td>
                                 <td class="actions">
-                                    <button class="approve" onclick="approve(1)">Approve</button>
-                                    <button class="reject" onclick="reject(1)">Reject</button>
+                                    <a class="approve" href="Verify_Department?prn=<%= studentsResultSet.getLong("prn")%>&status=approve">Approve</a>
+                                    <a class="reject" href="Verify_Department?prn=<%= studentsResultSet.getLong("prn")%>&status=reject">Reject</a>
                                 </td>
                             </tr>
+                            <%
+                                        }
+                                    }
+                                    connection.close();
+                                } catch (Exception e) {
+
+                                }
+
+                            %>
+
                             <!-- Add more rows as needed -->
                         </tbody>
                     </table>
@@ -224,38 +272,41 @@
         </div>
 
         <script>
-            function search() {
-                var input, filter, table, tr, td, i, txtValue;
-                input = document.getElementById("search-input");
-                filter = input.value.toUpperCase();
-                table = document.querySelector("table");
-                tr = table.getElementsByTagName("tr");
+            document.addEventListener("DOMContentLoaded", function () {
+                const searchInput = document.getElementById("searchInput");
+                const dataTable = document.getElementById("dataTable").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
 
-                for (i = 0; i < tr.length; i++) {
-                    td = tr[i].getElementsByTagName("td")[0]; // Change index based on the column you want to search
-                    if (td) {
-                        txtValue = td.textContent || td.innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            tr[i].style.display = "";
+                searchInput.addEventListener("keyup", function () {
+                    const searchValue = searchInput.value.toLowerCase();
+
+                    for (let i = 0; i < dataTable.length; i++) {
+                        const rowData = dataTable[i].textContent.toLowerCase();
+
+                        if (rowData.includes(searchValue)) {
+                            dataTable[i].style.display = "";
                         } else {
-                            tr[i].style.display = "none";
+                            dataTable[i].style.display = "none";
                         }
                     }
+                });
+            });
+        </script>
+<script >
+            
+            function alertNamefun() {
+                var status = '<%= session.getAttribute("status")%>';
+
+                if (status === "success") {
+                    alert("Response Send.")
                 }
-            }
-
-            function approve(id) {
-                alert("Approving: " + id);
-                document.querySelector(`#main-content table tbody tr:nth-child(${id}) td:nth-child(5)`).textContent = 'Approved';
-            }
-
-            function reject(id) {
-                var reason = prompt("Enter reason for rejection:");
-                if (reason !== null) {
-                    alert("Rejecting: " + id + " with reason: " + reason);
-                    document.querySelector(`#main-content table tbody tr:nth-child(${id}) td:nth-child(5)`).textContent = 'Rejected: ' + reason;
+                if (status === "failed") {
+                    alert("failed to set");
                 }
             }
         </script>
+        <script>
+            window.onload = alertNamefun;
+        </script>
+        <% session.setAttribute("status", null);%>
     </body>
 </html>

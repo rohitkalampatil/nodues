@@ -204,13 +204,13 @@
                             if (!Objects.equals(r.getString("libraryStatus"), "NA")) {
                 %>
                         <tr>
-                            <td>Library</td>
+                            <td><strong>Library Department</strong></td>
                 <%
                                 if (Objects.equals(r.getString("libraryStatus"), "allot")) {
                 %>
                                     <td class="status-check"><div class="allot">&#10004;</div></td>
                                     <td><input type="text" class="remark-input" readonly value="Click Vrify to Clearance"></td>
-                                    <td><button class="login-button">Verify</button></td>
+                                    <td><a href="Verify?sts=<%= r.getString("libraryStatus")%>&columnName=libraryStatus" class="login-button">Inquire</a></td>
                 <%
                                 }else if (Objects.equals(r.getString("libraryStatus"),"pending")){
                 %>
@@ -227,8 +227,8 @@
                                 }else{
                 %>
                                     <td class="status-check"><div class="unchecked">&#10008;</div></td>
-                                    <td><input type="text" class="remark-input" readonly value="Pending Dues"></td>
-                                    <td><button class="login-button">Verify</button></td>
+                                    <td><input type="text" class="remark-input" readonly value="Rejected,May some dues are Pending "></td>
+                                    <td><a href="Verify?sts=<%= r.getString("libraryStatus")%>&columnName=libraryStatus" class="login-button">Inquire</a></td>
                 <%
                                 }
                 %>
@@ -238,13 +238,13 @@
                             if (!Objects.equals(r.getString("accountStatus"), "NA")) {
                 %>
                         <tr>
-                            <td>Account</td>
+                            <td><strong>Account Department</strong></td>
                 <%
                                 if (Objects.equals(r.getString("accountStatus"), "allot")) {
                 %>
                                     <td class="status-check"><div class="allot">&#10004;</div></td>
                                     <td><input type="text" class="remark-input" readonly value="Click Vrify to Clearance"></td>
-                                    <td><button class="login-button">Verify</button></td>
+                                    <td><a href="Verify?sts=<%= r.getString("accountStatus")%>&columnName=accountStatus" class="login-button">Inquire</a></td>
                 <%
                                 }else if (Objects.equals(r.getString("accountStatus"),"pending")){
                 %>
@@ -261,8 +261,8 @@
                                 }else{
                 %>
                                     <td class="status-check"><div class="unchecked">&#10008;</div></td>
-                                    <td><input type="text" class="remark-input" readonly value="Pending Dues"></td>
-                                    <td><button class="login-button">Verify</button></td>
+                                   <td><input type="text" class="remark-input" readonly value="Rejected,May some dues are Pending "></td>
+                                    <td><a href="Verify?sts=<%= r.getString("accountStatus")%>&columnName=accountStatus" class="login-button">Inquire</a></td>
                 <%
                                 }
                 %>
@@ -272,13 +272,13 @@
                             if (!Objects.equals(r.getString("hostelStatus"), "NA")) {
                 %>
                         <tr>
-                            <td>Hostel Department</td>
+                            <td><strong>Hostel Department</strong></td>
                 <%
                                 if (Objects.equals(r.getString("hostelStatus"), "allot")) {
                 %>
                                     <td class="status-check"><div class="allot">&#10004;</div></td>
                                     <td><input type="text" class="remark-input" readonly value="Click Vrify to Clearance"></td>
-                                    <td><button class="login-button">Verify</button></td>
+                                    <td><a href="Verify?sts=<%= r.getString("hostelStatus")%>&columnName=hostelStatus" class="login-button">Inquire</a></td>
                 <%
                                 }else if (Objects.equals(r.getString("hostelStatus"),"pending")){
                 %>
@@ -295,8 +295,8 @@
                                 }else{
                 %>
                                     <td class="status-check"><div class="unchecked">&#10008;</div></td>
-                                    <td><input type="text" class="remark-input" readonly value="Pending Dues"></td>
-                                    <td><button class="login-button">Verify</button></td>
+                                    <td><input type="text" class="remark-input" readonly value="Rejected,May some dues are Pending "></td>
+                                    <td><a href="Verify?sts=<%= r.getString("hostelStatus")%>&columnName=hostelStatus" class="login-button">Inquire</a></td>
                 <%
                                 }
                 %>
@@ -306,13 +306,13 @@
                             if (!Objects.equals(r.getString("laboratoryStatus"), "NA")) {
                 %>
                         <tr>
-                            <td>Laboratory Department</td>
+                            <td><strong>Laboratory Department</strong></td>
                 <%
                                 if (Objects.equals(r.getString("laboratoryStatus"), "allot")) {
                 %>
                                     <td class="status-check"><div class="allot">&#10004;</div></td>
                                     <td><input type="text" class="remark-input" readonly value="Click Vrify to Clearance"></td>
-                                    <td><button class="login-button">Verify</button></td>
+                                    <td><a href="Verify?sts=<%= r.getString("laboratoryStatus") %>&columnName=laboratoryStatus" class="login-button">Inquire</a></td>
                 <%
                                 }else if (Objects.equals(r.getString("laboratoryStatus"),"pending")){
                 %>
@@ -329,8 +329,8 @@
                                 }else{
                 %>
                                     <td class="status-check"><div class="unchecked">&#10008;</div></td>
-                                    <td><input type="text" class="remark-input" readonly value="Pending Dues"></td>
-                                    <td><button class="login-button">Verify</button></td>
+                                   <td><input type="text" class="remark-input" readonly value="Rejected,May some dues are Pending "></td>
+                                   <td><a href="Verify?sts=<%= r.getString("laboratoryStatus") %>&columnName=laboratoryStatus" class="login-button">Inquire</a></td>
                 <%
                                 }
                 %>
@@ -357,4 +357,21 @@
                     <div class="status-check"><div class="pending">&#10004;</div>Pending</div>
                 </div>
     </body>
+    <script >
+            
+            function alertNamefun() {
+                var status = '<%= session.getAttribute("status")%>';
+
+                if (status === "success") {
+                    alert("Request sent.")
+                }
+                if (status === "failed") {
+                    alert("failed to set");
+                }
+            }
+        </script>
+        <script>
+            window.onload = alertNamefun;
+        </script>
+        <% session.setAttribute("status", null);%>
 </html>

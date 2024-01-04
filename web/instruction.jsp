@@ -69,8 +69,12 @@
             .red-cross {
                 color: #dc3545;
             }
-
-
+            .grey{
+                color: grey;
+            }
+            .blue{
+                color: blue;
+            }
             footer {
                 background: white;
                 color: black;
@@ -106,6 +110,8 @@
                 <li class="green-check">Green Checkmark: No pending dues in this department. You are clear.</li>
                 <li class="red-cross">Red Cross: Click on the red cross to view detailed remarks and understand the
                     outstanding dues.</li>
+                <li class="blue"> Blue Checkmark : Blue check mark shows that Request is Pending, No action taken by Department</li>
+                <li class="grey">Grey Checkmark : Send request of clearance to Department</li>
 
             </ol>
         </section>

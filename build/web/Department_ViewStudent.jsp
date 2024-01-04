@@ -82,7 +82,7 @@
                 width: 75%;
             }
 
-            #student-table {
+            #dataTable {
                 width: 100%;
                 border-collapse: collapse;
                 margin-bottom: 20px;
@@ -109,7 +109,7 @@
                 margin-bottom: 20px;
             }
 
-            #search-input {
+            #searchInput {
                 flex-grow: 1;
                 padding: 8px;
                 border: 1px solid #ccc;
@@ -168,10 +168,10 @@
                 </div>
                 <div id="right-aside">
                     <div id="search-bar">
-                        <input type="text" placeholder="Search..." id="search-input">
-                        <button id="search-button" onclick="search()">Search</button>
+                        <input type="text" placeholder="Search..." id="searchInput">
+                        
                     </div>
-                    <table id="student-table">
+                    <table id="dataTable">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -216,25 +216,24 @@
         </div>
 
         <script>
-            function search() {
-                var input, filter, table, tr, td, i, txtValue;
-                input = document.getElementById("search-input");
-                filter = input.value.toUpperCase();
-                table = document.getElementById("student-table");
-                tr = table.getElementsByTagName("tr");
+            document.addEventListener("DOMContentLoaded", function () {
+                const searchInput = document.getElementById("searchInput");
+                const dataTable = document.getElementById("dataTable").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
 
-                for (i = 0; i < tr.length; i++) {
-                    td = tr[i].getElementsByTagName("td")[0]; // Change index based on the column you want to search
-                    if (td) {
-                        txtValue = td.textContent || td.innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            tr[i].style.display = "";
+                searchInput.addEventListener("keyup", function () {
+                    const searchValue = searchInput.value.toLowerCase();
+
+                    for (let i = 0; i < dataTable.length; i++) {
+                        const rowData = dataTable[i].textContent.toLowerCase();
+
+                        if (rowData.includes(searchValue)) {
+                            dataTable[i].style.display = "";
                         } else {
-                            tr[i].style.display = "none";
+                            dataTable[i].style.display = "none";
                         }
                     }
-                }
-            }
+                });
+            });
         </script>
         <script >
             function alertNamefun() {
