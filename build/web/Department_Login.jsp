@@ -5,7 +5,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>No dues | Department Login  </title>
+        <title>No dues | Department Login </title>
         <style>
             body {
                 margin: 0;
@@ -100,26 +100,29 @@
         </style>
     </head>
     <body>
+
         <div class="login-container">
             <h2>Department Login</h2>
             <form class="login-form" action="Login" method="POST">
                 <div class="form-group">
-                    <label for="department">Department:</label>
+                    <label for="department">Select Department:</label>
                     <select id="department" name="department" required>
                         <%
                             Statement st;
                             Connection c1;
+                            ResultSet r = null;
                             try {
                                 Class.forName("com.mysql.jdbc.Driver");
                                 c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseclearance", "root", "root");
                                 st = c1.createStatement();
 
-                                ResultSet r = st.executeQuery("select departmentName from department;");
+                                r = st.executeQuery("select departmentName from department;");
                                 while (r.next()) {
                         %>
-                        <option value="<%= r.getString("departmentName")%>"><%= r.getString("departmentName")%></option>
+                        <option value="<%= r.getString("departmentName")%>"><%= r.getString("departmentName").substring(0, 1).toUpperCase() + r.getString("departmentName").substring(1)%></option>
                         <%
                                 }
+                                c1.close();
                             } catch (Exception e) {
 
                             }

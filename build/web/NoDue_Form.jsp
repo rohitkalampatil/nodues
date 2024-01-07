@@ -130,16 +130,15 @@
             if (session.getAttribute("department") == null) {
                 //checking only prn cause if prn gets nulll it will not check further for true
                 response.sendRedirect("Department_Login.jsp");
-            }
+            } else {
         %>
         <div id="header">
             <div id="nav">
-                <h1>Department Name</h1>
-            </div>
+                <h1><%= session.getAttribute("department").toString().substring(0, 1).toUpperCase() + session.getAttribute("department").toString().substring(1)%></h1>            </div>
             <div id="options">
+                <a href="Department_Dashboard.jsp">No dues requests</a>
                 <a href="Department_AddStudent.jsp">Add Student</a>
                 <a href="Department_ViewStudent.jsp">View Student</a>
-               
                 <a href="Department_ChangePassword.jsp">Change Password</a>
                 <a href="Logout">Logout</a>
             </div>
@@ -150,7 +149,7 @@
                 <div id="left-aside">
                     <nav>
                         <ul>
-                            <li><a href="Department_Dashboard.jsp">pending</a></li>
+                            <li><a href="#">pending</a></li>
                             <li><a href="#">Approved</a></li>
                             <li><a href="#">Rejected</a></li>
                         </ul>
@@ -159,38 +158,38 @@
                 <div id="right-aside">
                     <div id="nodue-form">
                         <h2>Allot No Dues</h2>
-                       
+
                         <form action="NoDueForm" method="POST">
                             <label for="prn">PRN:</label>
-                            <input type="text" readonly="true" value="<%= request.getParameter("prn") != null ? request.getParameter("prn"):0%>" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" id="prn" name="prn" required>
+                            <input type="text" readonly="true" value="<%= request.getParameter("prn") != null ? request.getParameter("prn") : 0%>" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" id="prn" name="prn" required>
 
                             <label for="year">Year:</label>
-                            <input type="text" value="<%= request.getParameter("year") %>" id="year" name="year" required readonly="true">
+                            <input type="text" value="<%= request.getParameter("year")%>" id="year" name="year" required readonly="true">
 
                             <label>Status for Hostel Department:</label>
                             <select id="status_hostel" name="status_hostel" required>
-                                
+
                                 <option value="NA">NA</option>
                                 <option value="allot">Allot</option>
                             </select>
 
                             <label>Status for Account Department:</label>
                             <select id="status_account" name="status_account" required>
-                              
+
                                 <option value="NA">NA</option>
                                 <option value="allot">Allot</option>
                             </select>
 
                             <label>Status for Library Department:</label>
                             <select id="status_library" name="status_library" required>
-                                
+
                                 <option value="NA">NA</option>
                                 <option value="allot">Allot</option>
                             </select>
 
                             <label>Status for Laboratory Department:</label>
                             <select id="status_laboratory" name="status_laboratory" required>
-                                
+
                                 <option value="NA">NA</option>
                                 <option value="allot">Allot</option>
                             </select>
@@ -201,6 +200,7 @@
                 </div>
             </div>
         </div>
-        
+
     </body>
+    <%}%>
 </html>

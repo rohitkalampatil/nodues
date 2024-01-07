@@ -130,13 +130,14 @@
             if (session.getAttribute("department") == null) {
                 //checking only prn cause if prn gets nulll it will not check further for true
                 response.sendRedirect("Department_Login.jsp");
-            }
+            }else {
         %>
         <div id="header">
             <div id="nav">
-                <h1><%= session.getAttribute("department")%></h1>
+                <h1><%= session.getAttribute("department").toString().substring(0,1).toUpperCase()+session.getAttribute("department").toString().substring(1)%></h1>
             </div>
             <div id="options">
+                <a href="Department_Dashboard.jsp">No dues requests</a>
                 <a href="Department_AddStudent.jsp">Add Student</a>
                 <a href="Department_ViewStudent.jsp">View Student</a>
                 
@@ -150,7 +151,7 @@
                 <div id="left-aside">
                     <nav>
                         <ul>
-                            <li><a href="Department_Dashboard.jsp">pending</a></li>
+                            <li><a href="#">pending</a></li>
                             <li><a href="#">Approved</a></li>
                             <li><a href="#">Rejected</a></li>
                         </ul>
@@ -213,4 +214,5 @@
         <% session.setAttribute("status", null);
         %>
     </body>
+    <%}%>
 </html>

@@ -102,11 +102,11 @@
     <body>
 
         <div class="login-container">
-            <h2>Department Login</h2>
-            <form class="login-form" action="Login" method="POST">
+            <h2>HOD Login</h2>
+            <form class="login-form" action="HodLogin" method="POST">
                 <div class="form-group">
                     <label for="department">Select Department:</label>
-                    <select id="department" name="department" required>
+                    <select id="hodid" name="hodid" required>
                         <%
                             Statement st;
                             Connection c1;
@@ -116,10 +116,10 @@
                                 c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseclearance", "root", "root");
                                 st = c1.createStatement();
 
-                                r = st.executeQuery("select departmentName from department;");
+                                r = st.executeQuery("select hodId from hod;");
                                 while (r.next()) {
                         %>
-                        <option value="<%= r.getString("departmentName")%>"><%= r.getString("departmentName").substring(0, 1).toUpperCase() + r.getString("departmentName").substring(1)%></option>
+                        <option value="<%= r.getString("hodId")%>"><%= r.getString("hodId").substring(0, 1).toUpperCase() + r.getString("hodId").substring(1)%></option>
                         <%
                                 }
                                 c1.close();

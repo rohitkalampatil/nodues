@@ -160,9 +160,9 @@
         <%
             // can not store user data on this page ie to prevent back after logout
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-            if (session.getAttribute("department") == null) {
+            if (session.getAttribute("hodid") == null) {
                 //checking only prn cause if prn gets nulll it will not check further for true
-                response.sendRedirect("Department_Login.jsp");
+                response.sendRedirect("Hod_Login.jsp");
             }else {
         %>
         <div id="header">
@@ -170,7 +170,7 @@
                  <h1><%= session.getAttribute("department").toString().substring(0,1).toUpperCase()+session.getAttribute("department").toString().substring(1)%></h1>
             </div>
             <div id="options">
-                <a href="Department_Dashboard.jsp">No dues requests</a>
+                
                 <a href="Department_AddStudent.jsp">Add Student</a>
                 <a href="Department_ViewStudent.jsp">View Student</a>
 
@@ -179,98 +179,7 @@
             </div>
         </div>
 
-        <div id="main-content">
-            <div id="aside">
-                <div id="left-aside">
-                    <nav>
-                        <ul>
-                            <li><a href="#">pending</a></li>
-                            <li><a href="#">Approved</a></li>
-                            <li><a href="#">Rejected</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div id="right-aside">
-                    <div id="search-bar">
-                        <input type="text" placeholder="Search..." id="searchInput">
-                        
-                    </div>
-                    <table id="dataTable">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>ID</th>
-                                <th>Contact</th>
-                                <th>Email</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <%
-                                // Database connection parameters
-                                String url = "jdbc:mysql://localhost:3306/noduseclearance";
-                                String username = "root";
-                                String password = "root";
-
-                                try {
-                                    // Load the JDBC driver
-                                    Class.forName("com.mysql.jdbc.Driver");
-
-                                    // Establish a connection
-                                    Connection connection = DriverManager.getConnection(url, username, password);
-
-                                    String dprtSts = "";
-                                    if (session.getAttribute("department").equals("account")) {
-                                        dprtSts = "accountStatus";
-                                    } else if (session.getAttribute("department").equals("library")) {
-                                        dprtSts = "libraryStatus";
-                                    } else if (session.getAttribute("department").equals("laboratory")) {
-                                        dprtSts = "laboratoryStatus";
-                                    } else if (session.getAttribute("department").equals("hostel")) {
-                                        dprtSts = "hostelStatus";
-                                    }
-                                    session.setAttribute("dprtSts", dprtSts);
-                                    // Create a statement for noduse table
-                                    Statement noduseStatement = connection.createStatement();
-                                    ResultSet noduseResultSet = noduseStatement.executeQuery("SELECT * FROM noduse where " + dprtSts + "='pending'");
-                                    // Display the data in an HTML table
-                                    Statement studentsStatement = connection.createStatement();
-                                    while (noduseResultSet.next()) {
-
-                                        ResultSet studentsResultSet = studentsStatement.executeQuery("SELECT * FROM students where prn=" + noduseResultSet.getLong("prn"));
-
-                                        if (studentsResultSet.next()) {
-
-                            %>
-                            <tr>
-                                <td><%= studentsResultSet.getString("name")%></td>
-                                <td><%= studentsResultSet.getLong("prn")%></td>
-                                <td><%= studentsResultSet.getLong("mobile")%></td>
-                                <td><%= studentsResultSet.getString("email")%></td>
-                                <td><%= noduseResultSet.getString(dprtSts)%></td>
-                                <td class="actions">
-                                    <a class="approve" href="Verify_Department?prn=<%= studentsResultSet.getLong("prn")%>&status=approve">Approve</a>
-                                    <a class="reject" href="Verify_Department?prn=<%= studentsResultSet.getLong("prn")%>&status=reject">Reject</a>
-                                </td>
-                            </tr>
-                            <%
-                                        }
-                                    }
-                                    connection.close();
-                                } catch (Exception e) {
-
-                                }
-
-                            %>
-
-                            <!-- Add more rows as needed -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+        
 
         <script>
             document.addEventListener("DOMContentLoaded", function () {
@@ -292,23 +201,7 @@
                 });
             });
         </script>
-<script >
-            
-            function alertNamefun() {
-                var status = '<%= session.getAttribute("status")%>';
 
-                if (status === "success") {
-                    alert("Response Send.")
-                }
-                if (status === "failed") {
-                    alert("failed to set");
-                }
-            }
-        </script>
-        <script>
-            window.onload = alertNamefun;
-        </script>
-        <% session.setAttribute("status", null);%>
     </body>
     <%}%>
 </html>
