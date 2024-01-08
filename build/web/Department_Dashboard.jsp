@@ -186,6 +186,7 @@
                             <li><button class="btn" id="approvebtn">Approved</button></li>
                             <li><button class="btn" id="rejectbtn">Rejected</button></li>
                             <li><button class="btn" id="pendingbtn">Pending</button></li>
+                            <li><button class="btn" id="allbtn">List All</button></li>
                         </ul>
                     </nav>
                 </div>
@@ -278,7 +279,14 @@
 
                 const approveButton = document.getElementById("approvebtn");
                 const rejectButton = document.getElementById("rejectbtn");
-                const pendingButton = document.getElementById("pending");
+                const pendingButton = document.getElementById("pendingbtn");
+                const allButton = document.getElementById("allbtn");
+
+                allButton.addEventListener("click", function () {
+                    document.location.href = "Department_Dashboard.jsp";
+                });
+
+
                 approveButton.addEventListener("click", function () {
                     stpTable("approve");
                 });
@@ -286,8 +294,8 @@
                 rejectButton.addEventListener("click", function () {
                     stpTable("reject");
                 });
-                
-                pendingButton.addEventListener("click", function(){
+
+                pendingButton.addEventListener("click", function () {
                     stpTable("pending");
                 });
 
@@ -321,7 +329,7 @@
         <script >
 
             function alertNamefun() {
-        var status = '<%= session.getAttribute("status")%>';
+                var status = '<%= session.getAttribute("status")%>';
 
                 if (status === "success") {
                     alert("Response Send.")
