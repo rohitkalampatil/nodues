@@ -7,10 +7,15 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>No dues | Department Login </title>
         <style>
-            body {
+            body{
                 margin: 0;
                 padding: 0;
                 font-family: Arial, sans-serif;
+            }
+            .body {
+                margin: 0;
+                padding: 0;
+                
                 background-color: #2c3e50;
                 display: flex;
                 align-items: center;
@@ -97,11 +102,26 @@
                 transform: translateY(-50%);
                 cursor: pointer;
             }
+            .spanerror{
+                color: tomato;
+            }
+            #nav {
+                background: #2c3e50;
+                display: flex;
+                padding-left: 10px;
+                padding-top: 10px;
+                align-items: center;
+            }
         </style>
     </head>
     <body>
-
-        <div class="login-container">
+        <header>
+            <nav id="nav">
+                <a href="index.html"><img src="home.png" alt="Home" ></a>
+        </nav>
+        </header>
+        <div class="body">
+            <div class="login-container">
             <h2>Department Login</h2>
             <form class="login-form" action="Login" method="POST">
                 <div class="form-group">
@@ -119,7 +139,7 @@
                                 r = st.executeQuery("select departmentName from department;");
                                 while (r.next()) {
                         %>
-                        <option value="<%= r.getString("departmentName")%>"><%= r.getString("departmentName").substring(0, 1).toUpperCase() + r.getString("departmentName").substring(1)%></option>
+                                    <option value="<%= r.getString("departmentName")%>"><%= r.getString("departmentName").substring(0, 1).toUpperCase() + r.getString("departmentName").substring(1)%></option>
                         <%
                                 }
                                 c1.close();
@@ -129,7 +149,6 @@
                         %>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" id="password" name="password" required>
@@ -138,19 +157,16 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <span id="error" ><%= session.getAttribute("error") == null ? "" : session.getAttribute("error")%></span>
-
+                    <span class="spanerror" id="error" ><%= session.getAttribute("error") == null ? "" : session.getAttribute("error")%></span>
                 </div>
-
                 <div class="form-group">
                     <input type="submit" class="submit-button" value="Login"/>
                 </div>
             </form>
         </div>
-
+        </div>
 
         <script >
-
             function togglePasswordVisibility() {
                 const passwordInput = document.getElementById('password');
                 const eyeIcon = document.getElementById('eye-icon');
@@ -164,18 +180,14 @@
             }
 
             function alertNamefun() {
-
                 setTimeout(fundiss, 3000);
                 function fundiss() {
                     document.getElementById("error").innerHTML = '<% session.setAttribute("error", "");%>';
                 }
-
             }
         </script>
-
         <script>
             window.onload = alertNamefun;
         </script>
-
     </body>
 </html>

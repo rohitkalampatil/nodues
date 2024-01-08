@@ -169,7 +169,7 @@
         %>
         <div id="header">
             <div id="nav">
-                <h1><%= session.getAttribute("departmentName").toString().substring(0, 1).toUpperCase() + session.getAttribute("departmentName").toString().substring(1)%></h1>
+                <h1><%= session.getAttribute("departmentName").toString().substring(0, 1).toUpperCase() + session.getAttribute("departmentName").toString().substring(1)%> Department</h1>
             </div>
             <div id="options">
                 <a href="Department_Dashboard.jsp">No dues requests</a>
@@ -193,7 +193,6 @@
                 <div id="right-aside">
                     <div id="search-bar">
                         <input type="text" placeholder="Search..." id="searchInput">
-
                     </div>
                     <table id="dataTable">
                         <thead>
@@ -231,12 +230,14 @@
                                     } else if (session.getAttribute("departmentName").equals("hostel")) {
                                         departmentStatus = "hostelStatus";
                                     }
+                                    
                                     session.setAttribute("departmentStatus", departmentStatus);
-                                    // Create a statement for noduse table
+                                    
                                     Statement noduseStatement = connection.createStatement();
-                                    ResultSet noduseResultSet = noduseStatement.executeQuery("SELECT * FROM noduse where " + departmentStatus + "='reject' or " + departmentStatus + "='pending' or " + departmentStatus + "='approve'");
-                                    // Display the data in an HTML table
                                     Statement studentsStatement = connection.createStatement();
+                                    
+                                    ResultSet noduseResultSet = noduseStatement.executeQuery("SELECT * FROM noduse where " + departmentStatus + "='reject' or " + departmentStatus + "='pending' or " + departmentStatus + "='approve'");
+               
                                     while (noduseResultSet.next()) {
 
                                         ResultSet studentsResultSet = studentsStatement.executeQuery("SELECT * FROM students where prn=" + noduseResultSet.getLong("prn"));
@@ -265,7 +266,6 @@
 
                             %>
 
-                            <!-- Add more rows as needed -->
                         </tbody>
                     </table>
                 </div>

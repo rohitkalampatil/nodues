@@ -7,10 +7,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Student Login</title>
         <style>
-            body {
+            body{
                 margin: 0;
                 padding: 0;
                 font-family: Arial, sans-serif;
+            }
+            .body {
+                
                 background-color: #2c3e50;
                 display: flex;
                 align-items: center;
@@ -108,14 +111,28 @@
                 transform: translateY(-50%);
                 cursor: pointer;
             }
+            .spanerror{
+                color: tomato;
+            }
+             #nav {
+                background: #2c3e50;
+                display: flex;
+                padding-left: 10px;
+                padding-top: 10px;
+                align-items: center;
+            }
         </style>
     </head>
     <body>
-        <div class="login-container">
-            <h2>Login</h2>
-            
-            <form class="login-form" action="Student_Login" method="POST">
-                
+        <header>
+            <nav id="nav">
+                <a href="index.html"><img src="home.png" alt="Home" ></a>
+        </nav>
+        </header>
+        <div class="body">
+            <div class="login-container">
+            <h2>Login</h2>         
+            <form class="login-form" action="Student_Login" method="POST">            
                 <div class="form-group">
                     <label for="username">Username:</label>
                     <input type="text" id="username" maxlength="16" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" name="username" value="<%= session.getAttribute("prn") == null ? "" : session.getAttribute("prn")%>" required>
@@ -123,26 +140,23 @@
                         <img src="user.png" alt="user-icon" id="user" >
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" maxlength="8" id="password" name="password" required>
                     <div class="toggle-btn" onclick="togglePasswordVisibility()">
                         <img src="eye-open.png" alt="Toggle Password Visibility" id="eye-icon">
                     </div>
-                </div>
-                
+                </div>               
                 <div class="form-group">
-                    <span id="error" ><%= session.getAttribute("error") == null ? "" : session.getAttribute("error")%></span>
-                </div>
-                
+                    <span class="spanerror" id="error" ><%= session.getAttribute("error") == null ? "" : session.getAttribute("error")%></span>
+                </div>              
                 <div class="form-group">
                     <input type="submit" value="Login" class="submit-button"/> 
                 </div>
 
             </form>
         </div>
-
+        </div>
 
         <script>
             function togglePasswordVisibility() {
@@ -157,8 +171,8 @@
                     eyeIcon.src = 'eye-open.png';
                 }
             }
+            
             function alertNamefun() {
-
                 setTimeout(fundiss, 3000);
                 function fundiss() {
                     document.getElementById("error").innerHTML = '<% session.setAttribute("error", "");%>';
