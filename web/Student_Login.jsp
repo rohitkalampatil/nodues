@@ -118,7 +118,7 @@
                 
                 <div class="form-group">
                     <label for="username">Username:</label>
-                    <input type="text" id="username" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" name="username" value="<%= session.getAttribute("prn") == null ? "" : session.getAttribute("prn")%>" required>
+                    <input type="text" id="username" maxlength="16" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" name="username" value="<%= session.getAttribute("prn") == null ? "" : session.getAttribute("prn")%>" required>
                     <div  class="toggle-btn" >
                         <img src="user.png" alt="user-icon" id="user" >
                     </div>
@@ -126,7 +126,7 @@
 
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" maxlength="8" id="password" name="password" required>
                     <div class="toggle-btn" onclick="togglePasswordVisibility()">
                         <img src="eye-open.png" alt="Toggle Password Visibility" id="eye-icon">
                     </div>

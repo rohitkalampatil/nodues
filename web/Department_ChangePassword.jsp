@@ -43,45 +43,13 @@
                 color: yellow;
             }
             #aside {
-                display: flex;
-                justify-content: space-between;
+
+                justify-content: center;
                 margin: 20px;
             }
 
-            #left-aside {
-                width: 20%;
-                background-color: #2c3e50;
-                color: #fff;
-                padding: 10px;
-                border-radius: 8px;
-            }
-
-            #left-aside nav ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-
-            #left-aside nav a {
-                text-decoration: none;
-                color: #fff;
-                display: block;
-                padding: 8px;
-                margin-bottom: 5px;
-                border-radius: 4px;
-                transition: background-color 0.3s;
-            }
-
-            #left-aside nav a:hover {
-                background-color: #217dbb;
-            }
-
-            #right-aside {
-                width: 75%;
-            }
-
             #change-password-form {
-                width: 80%;
+                width: 40%;
                 margin: 0 auto;
                 padding: 20px;
                 background-color: #fff;
@@ -102,7 +70,7 @@
             }
 
             #change-password-form input {
-                width: 100%;
+                width: 97%;
                 padding: 8px;
                 margin-bottom: 15px;
                 border: 1px solid #ccc;
@@ -126,58 +94,47 @@
         <%
             // can not store user data on this page ie to prevent back after logout
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-            if (session.getAttribute("department") == null) {
+            if (session.getAttribute("departmentName") == null) {
                 //checking only prn cause if prn gets nulll it will not check further for true
                 response.sendRedirect("Department_Login.jsp");
+                
             } else {
         %>
         <div id="header">
             <div id="nav">
-                 <h1><%= session.getAttribute("department").toString().substring(0,1).toUpperCase()+session.getAttribute("department").toString().substring(1)%></h1>
+                <h1><%= session.getAttribute("departmentName").toString().substring(0, 1).toUpperCase() + session.getAttribute("departmentName").toString().substring(1)%></h1>
             </div>
             <div id="options">
                 <a href="Department_Dashboard.jsp">No dues requests</a>
-                <a href="Department_AddStudent.jsp">Add Student</a>
-                <a href="Department_ViewStudent.jsp">View Student</a>
-
                 <a href="Department_ChangePassword.jsp">Change Password</a>
                 <a href="Logout">Logout</a>
             </div>
         </div>
 
         <div id="main-content">
+
+
             <div id="aside">
-                <div id="left-aside">
-                    <nav>
-                        <ul>
-                            <li><a href="#">pending</a></li>
-                            <li><a href="#">Approved</a></li>
-                            <li><a href="#">Rejected</a></li>
+                <div id="change-password-form">
+                    <h2>Change Password</h2>
+                    <form action="DeptChangepass" method="POST">
+                        <label for="old-password">Old Password:</label>
+                        <input type="password" maxlength="8" id="old-password" name="password" required>
 
-                        </ul>
-                    </nav>
-                </div>
-                <div id="right-aside">
-                    <div id="change-password-form">
-                        <h2>Change Password</h2>
-                        <form action="DeptChangepass" method="POST">
-                            <label for="old-password">Old Password:</label>
-                            <input type="password" id="old-password" name="password" required>
+                        <label for="new-password">New Password:</label>
+                        <input type="password" maxlength="8" id="new-password" name="pwd1" required>
 
-                            <label for="new-password">New Password:</label>
-                            <input type="password" id="new-password" name="pwd1" required>
-
-                            <label for="confirm-new-password">Confirm New Password:</label>
-                            <input type="password" id="confirm-new-password" name="pwd2" required>
-                            <span id="error"><%= session.getAttribute("error") == null ? "" : session.getAttribute("error")%></span>
-                            <button type="submit">Submit</button>
-                        </form>
-                    </div>
+                        <label for="confirm-new-password">Confirm New Password:</label>
+                        <input type="password" maxlength="8" id="confirm-new-password" name="pwd2" required>
+                        <span id="error"><%= session.getAttribute("error") == null ? "" : session.getAttribute("error")%></span>
+                        <button type="submit">Submit</button>
+                    </form>
                 </div>
             </div>
+
         </div>
         <script >
-            
+
             function alertNamefun() {
                 var status = '<%= session.getAttribute("status")%>';
 

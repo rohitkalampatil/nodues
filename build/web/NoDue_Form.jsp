@@ -43,45 +43,15 @@
                 color: yellow;
             }
             #aside {
-                display: flex;
-                justify-content: space-between;
+                
+                justify-content: center;
                 margin: 20px;
             }
 
-            #left-aside {
-                width: 20%;
-                background-color: #2c3e50;
-                color: #fff;
-                padding: 10px;
-                border-radius: 8px;
-            }
-
-            #left-aside nav ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-
-            #left-aside nav a {
-                text-decoration: none;
-                color: #fff;
-                display: block;
-                padding: 8px;
-                margin-bottom: 5px;
-                border-radius: 4px;
-                transition: background-color 0.3s;
-            }
-
-            #left-aside nav a:hover {
-                background-color: #217dbb;
-            }
-
-            #right-aside {
-                width: 75%;
-            }
+            
 
             #nodue-form {
-                width: 80%;
+                width: 60%;
                 margin: 0 auto;
                 padding: 20px;
                 background-color: #fff;
@@ -103,7 +73,7 @@
 
             #nodue-form input,
             #nodue-form select {
-                width: 100%;
+                width: 97%;
                 padding: 8px;
                 margin-bottom: 15px;
                 border: 1px solid #ccc;
@@ -146,58 +116,50 @@
 
         <div id="main-content">
             <div id="aside">
-                <div id="left-aside">
-                    <nav>
-                        <ul>
-                            <li><a href="#">pending</a></li>
-                            <li><a href="#">Approved</a></li>
-                            <li><a href="#">Rejected</a></li>
-                        </ul>
-                    </nav>
+
+
+                <div id="nodue-form">
+                    <h2>Allot No Dues</h2>
+
+                    <form action="NoDueForm" method="POST">
+                        <label for="prn">PRN:</label>
+                        <input type="text" readonly="true" value="<%= request.getParameter("prn") != null ? request.getParameter("prn") : 0%>" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" id="prn" name="prn" required>
+
+                        <label for="year">Year:</label>
+                        <input type="text" value="<%= request.getParameter("year")%>" id="year" name="year" required readonly="true">
+
+                        <label>Status for Hostel Department:</label>
+                        <select id="status_hostel" name="status_hostel" required>
+
+                            <option value="NA">NA</option>
+                            <option value="allot">Allot</option>
+                        </select>
+
+                        <label>Status for Account Department:</label>
+                        <select id="status_account" name="status_account" required>
+
+                            <option value="NA">NA</option>
+                            <option value="allot">Allot</option>
+                        </select>
+
+                        <label>Status for Library Department:</label>
+                        <select id="status_library" name="status_library" required>
+
+                            <option value="NA">NA</option>
+                            <option value="allot">Allot</option>
+                        </select>
+
+                        <label>Status for Laboratory Department:</label>
+                        <select id="status_laboratory" name="status_laboratory" required>
+
+                            <option value="NA">NA</option>
+                            <option value="allot">Allot</option>
+                        </select>
+
+                        <button type="submit" >Submit</button>
+                    </form>
                 </div>
-                <div id="right-aside">
-                    <div id="nodue-form">
-                        <h2>Allot No Dues</h2>
 
-                        <form action="NoDueForm" method="POST">
-                            <label for="prn">PRN:</label>
-                            <input type="text" readonly="true" value="<%= request.getParameter("prn") != null ? request.getParameter("prn") : 0%>" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" id="prn" name="prn" required>
-
-                            <label for="year">Year:</label>
-                            <input type="text" value="<%= request.getParameter("year")%>" id="year" name="year" required readonly="true">
-
-                            <label>Status for Hostel Department:</label>
-                            <select id="status_hostel" name="status_hostel" required>
-
-                                <option value="NA">NA</option>
-                                <option value="allot">Allot</option>
-                            </select>
-
-                            <label>Status for Account Department:</label>
-                            <select id="status_account" name="status_account" required>
-
-                                <option value="NA">NA</option>
-                                <option value="allot">Allot</option>
-                            </select>
-
-                            <label>Status for Library Department:</label>
-                            <select id="status_library" name="status_library" required>
-
-                                <option value="NA">NA</option>
-                                <option value="allot">Allot</option>
-                            </select>
-
-                            <label>Status for Laboratory Department:</label>
-                            <select id="status_laboratory" name="status_laboratory" required>
-
-                                <option value="NA">NA</option>
-                                <option value="allot">Allot</option>
-                            </select>
-
-                            <button type="submit" >Submit</button>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
 

@@ -45,42 +45,12 @@
                 color: yellow;
             }
             #aside {
-                display: flex;
-                justify-content: space-between;
+                
+                justify-content: center;
                 margin: 20px;
             }
 
-            #left-aside {
-                width: 20%;
-                background-color: #2c3e50;
-                color: #fff;
-                padding: 10px;
-                border-radius: 8px;
-            }
-
-            #left-aside nav ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-
-            #left-aside nav a {
-                text-decoration: none;
-                color: #fff;
-                display: block;
-                padding: 8px;
-                margin-bottom: 5px;
-                border-radius: 4px;
-                transition: background-color 0.3s;
-            }
-
-            #left-aside nav a:hover {
-                background-color: #217dbb;
-            }
-
-            #right-aside {
-                width: 75%;
-            }
+            
 
             #dataTable {
                 width: 100%;
@@ -135,6 +105,10 @@
             if (session.getAttribute("department") == null) {
                 //checking only prn cause if prn gets nulll it will not check further for true
                 response.sendRedirect("Department_Login.jsp");
+                
+            } else if (session.getAttribute("hodid") == null) {
+                response.sendRedirect("Hod_Login.jsp");
+                
             } else {
                 Statement st = null;
                 Connection c1 = null;
@@ -142,33 +116,25 @@
         %>
         <div id="header">
             <div id="nav">
-              <h1><%= session.getAttribute("department").toString().substring(0,1).toUpperCase()+session.getAttribute("department").toString().substring(1)%></h1>
+                <h1><%= session.getAttribute("department").toString().substring(0, 1).toUpperCase() + session.getAttribute("department").toString().substring(1)%></h1>
             </div>
             <div id="options">
-                <a href="Department_Dashboard.jsp">No dues requests</a>
+                
                 <a href="Department_AddStudent.jsp">Add Student</a>
                 <a href="Department_ViewStudent.jsp">View Student</a>
-                
-                <a href="Department_ChangePassword.jsp">Change Password</a>
+
+                <a href="Hod_ChangePassword.jsp">Change Password</a>
                 <a href="Logout">Logout</a>
             </div>
         </div>
 
         <div id="main-content">
             <div id="aside">
-                <div id="left-aside">
-                    <nav>
-                        <ul>
-                            <li><a href="#">pending</a></li>
-                            <li><a href="#">Approved</a></li>
-                            <li><a href="#">Rejected</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div id="right-aside">
+                
+              
                     <div id="search-bar">
                         <input type="text" placeholder="Search..." id="searchInput">
-                        
+
                     </div>
                     <table id="dataTable">
                         <thead>
@@ -187,7 +153,7 @@
                                 try {
                                     Class.forName("com.mysql.jdbc.Driver");
                                     c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseclearance", "root", "root");
-                                    q = "select * from students;";
+                                    q = "select * from students where department='"+session.getAttribute("department")+"';";
                                     st = c1.createStatement();
                                     ResultSet r = st.executeQuery(q);
                                     while (r.next()) {
@@ -211,7 +177,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+          
         </div>
 
         <script>
@@ -255,5 +221,5 @@
         %>
     </body>
     <%}%>
-    
+
 </html>

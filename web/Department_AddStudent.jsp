@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -43,45 +44,15 @@
                 color: yellow;
             }
             #aside {
-                display: flex;
-                justify-content: space-between;
+                
+                justify-content: center;
                 margin: 20px;
             }
 
-            #left-aside {
-                width: 20%;
-                background-color: #2c3e50;
-                color: #fff;
-                padding: 10px;
-                border-radius: 8px;
-            }
-
-            #left-aside nav ul {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-
-            #left-aside nav a {
-                text-decoration: none;
-                color: #fff;
-                display: block;
-                padding: 8px;
-                margin-bottom: 5px;
-                border-radius: 4px;
-                transition: background-color 0.3s;
-            }
-
-            #left-aside nav a:hover {
-                background-color: #217dbb;
-            }
-
-            #right-aside {
-                width: 75%;
-            }
+            
 
             #registration-form {
-                width: 80%;
+                width: 50%;
                 margin: 0 auto;
                 padding: 20px;
                 background-color: #fff;
@@ -103,7 +74,7 @@
 
             #registration-form input,
             #registration-form select {
-                width: 100%;
+                width: 97%;
                 padding: 8px;
                 margin-bottom: 15px;
                 border: 1px solid #ccc;
@@ -127,44 +98,60 @@
         <%
             // can not store user data on this page ie to prevent back after logout
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-            if (session.getAttribute("department") == null) {
+            if (session.getAttribute("hodid") == null) {
                 //checking only prn cause if prn gets nulll it will not check further for true
-                response.sendRedirect("Department_Login.jsp");
+                response.sendRedirect("Hod_Login.jsp");
             }else {
+            
+            Connection c1=null;
+            Statement st = null;
+            Long id=0l;
+            String url="jdbc:mysql://localhost:3306/noduseclearance",user="root",pass="root";
+            try{
+                
+                Class.forName("com.mysql.jdbc.Driver");
+                c1= DriverManager.getConnection(url,user,pass);
+                st =c1.createStatement();
+                
+                String sql="select count(prn) as id from students";
+                ResultSet r = st.executeQuery(sql);
+                
+                if(r.next()){
+                    if(r.getLong("id")==0){
+                        id = 1l;
+                    }else   
+                        id = (r.getLong("id")+1);
+                }
+                c1.close();
+            }catch(Exception e){
+                out.print(e);
+            }
         %>
         <div id="header">
             <div id="nav">
                 <h1><%= session.getAttribute("department").toString().substring(0,1).toUpperCase()+session.getAttribute("department").toString().substring(1)%></h1>
             </div>
             <div id="options">
-                <a href="Department_Dashboard.jsp">No dues requests</a>
+
                 <a href="Department_AddStudent.jsp">Add Student</a>
                 <a href="Department_ViewStudent.jsp">View Student</a>
                 
-                <a href="Department_ChangePassword.jsp">Change Password</a>
+                <a href="Hod_ChangePassword.jsp">Change Password</a>
                 <a href="Logout">Logout</a>
             </div>
         </div>
 
         <div id="main-content">
             <div id="aside">
-                <div id="left-aside">
-                    <nav>
-                        <ul>
-                            <li><a href="#">pending</a></li>
-                            <li><a href="#">Approved</a></li>
-                            <li><a href="#">Rejected</a></li>
-                        </ul>
-                    </nav>
-                </div>
-                <div id="right-aside">
+                
+                
                     <div id="registration-form">
                         <h2>Student Registration</h2>
                         <form action="RegisterStudent" method="POST">
                             <label for="department">Department:</label>
                             <select id="department" name="department" required="">
                                 <option value="computer">Computer Science</option>
-                                <option value="civil">civil</option>
+                                <option value="civil">Civil</option>
                                 <!-- Add more options as needed -->
                             </select>
 
@@ -178,8 +165,8 @@
                             <label for="name">Name:</label>
                             <input required="" type="text" id="name" name="name" onkeyup="this.value = this.value.replace(/[^A-Z a-z]/g, '')" >
 
-                            <label for="prn">PRN or ID:</label>
-                            <input required="" minlength="16" maxlength="16" type="text" id="prn" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" name="prn">
+                            <label for="prn">Student ID:</label>
+                            <input required="" minlength="16" value="<%= id %>" maxlength="16" type="text" id="prn" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" readonly="true" name="prn">
 
                             <label for="contact">Contact:</label>
                             <input type="tel" minlength="10" maxlength="10" id="contact" name="contact" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" required>
@@ -193,7 +180,7 @@
                             <button type="submit">Register</button>
                         </form>
                     </div>
-                </div>
+                
             </div>
         </div>
 

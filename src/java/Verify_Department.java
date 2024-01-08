@@ -29,7 +29,7 @@ public class Verify_Department extends HttpServlet {
             HttpSession session = request.getSession(true);
             //fromdepartmentpannel :
             // check dprtSts is null ornot further
-            String dprtSts = session.getAttribute("dprtSts").toString();
+            String dprtSts = session.getAttribute("departmentStatus").toString();
             String status = request.getParameter("status");
             Long Prn = Long.parseLong(request.getParameter("prn"));
             out.print(dprtSts + "" + status + "" + Prn);

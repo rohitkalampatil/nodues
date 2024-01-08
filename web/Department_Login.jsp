@@ -105,8 +105,8 @@
             <h2>Department Login</h2>
             <form class="login-form" action="Login" method="POST">
                 <div class="form-group">
-                    <label for="department">Select Department:</label>
-                    <select id="department" name="department" required>
+                    <label for="departmentName">Select Department:</label>
+                    <select id="departmentName" name="departmentName" required>
                         <%
                             Statement st;
                             Connection c1;

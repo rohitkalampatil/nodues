@@ -52,7 +52,7 @@
 
             #left-aside {
                 width: 20%;
-                background-color: #2c3e50;
+
                 color: #fff;
                 padding: 10px;
                 border-radius: 8px;
@@ -64,17 +64,19 @@
                 margin: 0;
             }
 
-            #left-aside nav a {
-                text-decoration: none;
-                color: #fff;
+            #left-aside nav button {
+                width: 100%;
+                color: #2c3e50;
                 display: block;
                 padding: 8px;
                 margin-bottom: 5px;
-                border-radius: 4px;
+                border: 2px solid #007BFF;
+                background: transparent;
+                border-radius: 5px;
                 transition: background-color 0.3s;
             }
 
-            #left-aside nav a:hover {
+            #left-aside nav button:hover {
                 background-color: #217dbb;
             }
 
@@ -160,20 +162,17 @@
         <%
             // can not store user data on this page ie to prevent back after logout
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-            if (session.getAttribute("department") == null) {
+            if (session.getAttribute("departmentName") == null) {
                 //checking only prn cause if prn gets nulll it will not check further for true
                 response.sendRedirect("Department_Login.jsp");
-            }else {
+            } else {
         %>
         <div id="header">
             <div id="nav">
-                 <h1><%= session.getAttribute("department").toString().substring(0,1).toUpperCase()+session.getAttribute("department").toString().substring(1)%></h1>
+                <h1><%= session.getAttribute("departmentName").toString().substring(0, 1).toUpperCase() + session.getAttribute("departmentName").toString().substring(1)%></h1>
             </div>
             <div id="options">
                 <a href="Department_Dashboard.jsp">No dues requests</a>
-                <a href="Department_AddStudent.jsp">Add Student</a>
-                <a href="Department_ViewStudent.jsp">View Student</a>
-
                 <a href="Department_ChangePassword.jsp">Change Password</a>
                 <a href="Logout">Logout</a>
             </div>
@@ -184,16 +183,16 @@
                 <div id="left-aside">
                     <nav>
                         <ul>
-                            <li><a href="#">pending</a></li>
-                            <li><a href="#">Approved</a></li>
-                            <li><a href="#">Rejected</a></li>
+                            <li><button class="btn" id="approvebtn">Approved</button></li>
+                            <li><button class="btn" id="rejectbtn">Rejected</button></li>
+                            <li><button class="btn" id="pendingbtn">Pending</button></li>
                         </ul>
                     </nav>
                 </div>
                 <div id="right-aside">
                     <div id="search-bar">
                         <input type="text" placeholder="Search..." id="searchInput">
-                        
+
                     </div>
                     <table id="dataTable">
                         <thead>
@@ -221,27 +220,27 @@
                                     // Establish a connection
                                     Connection connection = DriverManager.getConnection(url, username, password);
 
-                                    String dprtSts = "";
-                                    if (session.getAttribute("department").equals("account")) {
-                                        dprtSts = "accountStatus";
-                                    } else if (session.getAttribute("department").equals("library")) {
-                                        dprtSts = "libraryStatus";
-                                    } else if (session.getAttribute("department").equals("laboratory")) {
-                                        dprtSts = "laboratoryStatus";
-                                    } else if (session.getAttribute("department").equals("hostel")) {
-                                        dprtSts = "hostelStatus";
+                                    String departmentStatus = "";
+                                    if (session.getAttribute("departmentName").equals("account")) {
+                                        departmentStatus = "accountStatus";
+                                    } else if (session.getAttribute("departmentName").equals("library")) {
+                                        departmentStatus = "libraryStatus";
+                                    } else if (session.getAttribute("departmentName").equals("laboratory")) {
+                                        departmentStatus = "laboratoryStatus";
+                                    } else if (session.getAttribute("departmentName").equals("hostel")) {
+                                        departmentStatus = "hostelStatus";
                                     }
-                                    session.setAttribute("dprtSts", dprtSts);
+                                    session.setAttribute("departmentStatus", departmentStatus);
                                     // Create a statement for noduse table
                                     Statement noduseStatement = connection.createStatement();
-                                    ResultSet noduseResultSet = noduseStatement.executeQuery("SELECT * FROM noduse where " + dprtSts + "='pending'");
+                                    ResultSet noduseResultSet = noduseStatement.executeQuery("SELECT * FROM noduse where " + departmentStatus + "='reject' or " + departmentStatus + "='pending' or " + departmentStatus + "='approve'");
                                     // Display the data in an HTML table
                                     Statement studentsStatement = connection.createStatement();
                                     while (noduseResultSet.next()) {
 
                                         ResultSet studentsResultSet = studentsStatement.executeQuery("SELECT * FROM students where prn=" + noduseResultSet.getLong("prn"));
 
-                                        if (studentsResultSet.next()) {
+                                        while (studentsResultSet.next()) {
 
                             %>
                             <tr>
@@ -249,7 +248,7 @@
                                 <td><%= studentsResultSet.getLong("prn")%></td>
                                 <td><%= studentsResultSet.getLong("mobile")%></td>
                                 <td><%= studentsResultSet.getString("email")%></td>
-                                <td><%= noduseResultSet.getString(dprtSts)%></td>
+                                <td><%= noduseResultSet.getString(departmentStatus)%></td>
                                 <td class="actions">
                                     <a class="approve" href="Verify_Department?prn=<%= studentsResultSet.getLong("prn")%>&status=approve">Approve</a>
                                     <a class="reject" href="Verify_Department?prn=<%= studentsResultSet.getLong("prn")%>&status=reject">Reject</a>
@@ -277,6 +276,33 @@
                 const searchInput = document.getElementById("searchInput");
                 const dataTable = document.getElementById("dataTable").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
 
+                const approveButton = document.getElementById("approvebtn");
+                const rejectButton = document.getElementById("rejectbtn");
+                const pendingButton = document.getElementById("pending");
+                approveButton.addEventListener("click", function () {
+                    stpTable("approve");
+                });
+
+                rejectButton.addEventListener("click", function () {
+                    stpTable("reject");
+                });
+                
+                pendingButton.addEventListener("click", function(){
+                    stpTable("pending");
+                });
+
+                function stpTable(sts) {
+                    for (let i = 0; i < dataTable.length; i++) {
+                        const rowData = dataTable[i].textContent;
+
+                        if (rowData.includes(sts)) {
+                            dataTable[i].style.display = "";
+                        } else {
+                            dataTable[i].style.display = "none";
+                        }
+                    }
+                }
+
                 searchInput.addEventListener("keyup", function () {
                     const searchValue = searchInput.value.toLowerCase();
 
@@ -292,10 +318,10 @@
                 });
             });
         </script>
-<script >
-            
+        <script >
+
             function alertNamefun() {
-                var status = '<%= session.getAttribute("status")%>';
+        var status = '<%= session.getAttribute("status")%>';
 
                 if (status === "success") {
                     alert("Response Send.")

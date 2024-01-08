@@ -173,8 +173,7 @@
                 
                 <a href="Department_AddStudent.jsp">Add Student</a>
                 <a href="Department_ViewStudent.jsp">View Student</a>
-
-                <a href="Department_ChangePassword.jsp">Change Password</a>
+                <a href="Hod_ChangePassword.jsp">Change Password</a>
                 <a href="Logout">Logout</a>
             </div>
         </div>

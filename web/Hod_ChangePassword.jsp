@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>No dues Form</title>
+        <title>Change Password</title>
         <style>
             body {
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -43,15 +43,13 @@
                 color: yellow;
             }
             #aside {
-                
+
                 justify-content: center;
                 margin: 20px;
             }
 
-            
-
-            #nodue-form {
-                width: 60%;
+            #change-password-form {
+                width: 40%;
                 margin: 0 auto;
                 padding: 20px;
                 background-color: #fff;
@@ -59,20 +57,19 @@
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             }
 
-            #nodue-form h2 {
+            #change-password-form h2 {
                 text-align: center;
                 margin-bottom: 20px;
                 color: #2c3e50;
             }
 
-            #nodue-form label {
+            #change-password-form label {
                 display: block;
                 margin-bottom: 8px;
                 color: #2c3e50;
             }
 
-            #nodue-form input,
-            #nodue-form select {
+            #change-password-form input {
                 width: 97%;
                 padding: 8px;
                 margin-bottom: 15px;
@@ -80,7 +77,7 @@
                 border-radius: 4px;
             }
 
-            #nodue-form button {
+            #change-password-form button {
                 background-color: #2c3e50;
                 color: #fff;
                 border: none;
@@ -97,72 +94,67 @@
         <%
             // can not store user data on this page ie to prevent back after logout
             response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-            if (session.getAttribute("department") == null) {
+            if (session.getAttribute("hodid") == null) {
                 //checking only prn cause if prn gets nulll it will not check further for true
-                response.sendRedirect("Department_Login.jsp");
-            } else {
+                response.sendRedirect("Hod_Login.jsp");
+            }else {
         %>
         <div id="header">
             <div id="nav">
-                <h1><%= session.getAttribute("department").toString().substring(0, 1).toUpperCase() + session.getAttribute("department").toString().substring(1)%></h1>            </div>
+                <h1><%= session.getAttribute("department").toString().substring(0, 1).toUpperCase() + session.getAttribute("department").toString().substring(1)%></h1>
+            </div>
             <div id="options">
-                <a href="Department_Dashboard.jsp">No dues requests</a>
                 <a href="Department_AddStudent.jsp">Add Student</a>
                 <a href="Department_ViewStudent.jsp">View Student</a>
-                <a href="Department_ChangePassword.jsp">Change Password</a>
+                <a href="Hod_ChangePassword.jsp">Change Password</a>
                 <a href="Logout">Logout</a>
             </div>
         </div>
 
         <div id="main-content">
+
+
             <div id="aside">
+                <div id="change-password-form">
+                    <h2>Change Password</h2>
+                    <form action="HodChangePass" method="POST">
+                        <label for="old-password">Old Password:</label>
+                        <input type="password" maxlength="8" id="old-password" name="password" required>
 
+                        <label for="new-password">New Password:</label>
+                        <input type="password" maxlength="8" id="new-password" name="pwd1" required>
 
-                <div id="nodue-form">
-                    <h2>Allot No Dues</h2>
-
-                    <form action="NoDueForm" method="POST">
-                        <label for="prn">PRN:</label>
-                        <input type="text" readonly="true" value="<%= request.getParameter("prn") != null ? request.getParameter("prn") : 0%>" onkeyup="this.value = this.value.replace(/[^0-9]/g, '')" maxlength="10" id="prn" name="prn" required>
-
-                        <label for="year">Year:</label>
-                        <input type="text" value="<%= request.getParameter("year")%>" id="year" name="year" required readonly="true">
-
-                        <label>Status for Hostel Department:</label>
-                        <select id="status_hostel" name="status_hostel" required>
-
-                            <option value="NA">NA</option>
-                            <option value="allot">Allot</option>
-                        </select>
-
-                        <label>Status for Account Department:</label>
-                        <select id="status_account" name="status_account" required>
-
-                            <option value="NA">NA</option>
-                            <option value="allot">Allot</option>
-                        </select>
-
-                        <label>Status for Library Department:</label>
-                        <select id="status_library" name="status_library" required>
-
-                            <option value="NA">NA</option>
-                            <option value="allot">Allot</option>
-                        </select>
-
-                        <label>Status for Laboratory Department:</label>
-                        <select id="status_laboratory" name="status_laboratory" required>
-
-                            <option value="NA">NA</option>
-                            <option value="allot">Allot</option>
-                        </select>
-
-                        <button type="submit" >Submit</button>
+                        <label for="confirm-new-password">Confirm New Password:</label>
+                        <input type="password" maxlength="8" id="confirm-new-password" name="pwd2" required>
+                        <span id="error"><%= session.getAttribute("error") == null ? "" : session.getAttribute("error")%></span>
+                        <button type="submit">Submit</button>
                     </form>
                 </div>
-
             </div>
-        </div>
 
+        </div>
+        <script >
+
+            function alertNamefun() {
+                var status = '<%= session.getAttribute("status")%>';
+
+                setTimeout(fundiss, 3000);
+                function fundiss() {
+                    document.getElementById("error").innerHTML = '<% session.setAttribute("error", "");%>';
+                }
+                if (status === "success") {
+                    alert("Password Changed Successfully")
+                }
+                if (status === "failed") {
+                    alert("failed to set New Password");
+                }
+            }
+        </script>
+        <script>
+            window.onload = alertNamefun;
+        </script>
+        <% session.setAttribute("status", null);%>
+        <% session.setAttribute("error", null);%>
     </body>
     <%}%>
 </html>

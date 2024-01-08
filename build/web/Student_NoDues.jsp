@@ -162,6 +162,7 @@
                 //checking only prn cause if prn gets nulll it will not check further for true
                 response.sendRedirect("Student_Login.jsp");
             }
+            
         %>
 
         <div id="navbar">
@@ -338,7 +339,8 @@
                 <%
                             }
                         }else{
-                            response.sendRedirect("Student_Login.jsp");
+                %><h1>No "No dues" Alloted...</h1><%
+                            //response.sendRedirect("Student_Login.jsp");
                             c1.close();
                         }
                         c1.close();

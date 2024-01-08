@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet(urlPatterns = {"/DeptChangepass"})
-public class DeptChangepass extends HttpServlet {
+@WebServlet(urlPatterns = {"/HodChangePass"})
+public class HodChangePass extends HttpServlet {
 
     private Connection c1 = null;
     private PreparedStatement statement = null;
@@ -26,54 +26,53 @@ public class DeptChangepass extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-
             databaseConnection();
             HttpSession session = request.getSession(true);
-            String departmentName = session.getAttribute("departmentName").toString();
+            String hodId = session.getAttribute("hodid").toString();
 
             String oldpass = request.getParameter("password");
             String newPass = request.getParameter("pwd1");
             String confPass = request.getParameter("pwd2");
 
             try {
-                statement = c1.prepareStatement("select password from department where departmentName=?");
-                statement.setString(1, departmentName);
+                statement = c1.prepareStatement("select password from hod where hodId=?");
+                statement.setString(1, hodId);
                 ResultSet r = statement.executeQuery();
                 if (r.next()) {
                     if (oldpass.equals(r.getString("password"))) {
                         if (newPass.length() >= 4 && newPass.length() <= 8) {
                             if (newPass.equals(confPass)) {
 
-                                statement = c1.prepareStatement("update department set password=? where departmentName=?");
+                                statement = c1.prepareStatement("update hod set password=? where hodId=?");
                                 statement.setString(1, newPass);
-                                statement.setString(2, departmentName);
+                                statement.setString(2, hodId);
                                 int rr = statement.executeUpdate();
                                 if (rr > 0) {
                                     c1.close();
                                     session.setAttribute("status", "success");
-                                    response.sendRedirect("Department_ChangePassword.jsp");
+                                    response.sendRedirect("Hod_ChangePassword.jsp");
                                 }
                             } else {
                                 c1.close();
                                 session.setAttribute("error", "New Password and Confirm Password missmatched");
-                                response.sendRedirect("Department_ChangePassword.jsp");
+                                response.sendRedirect("Hod_ChangePassword.jsp");
                             }
                         } else {
                             c1.close();
                             session.setAttribute("error", "password must minimum 4 or max 8 charecter long");
-                            response.sendRedirect("Department_ChangePassword.jsp");
+                            response.sendRedirect("Hod_ChangePassword.jsp");
                         }
                     } else {
                         c1.close();
                         session.setAttribute("error", "Wrong Old Password");
-                        response.sendRedirect("Department_ChangePassword.jsp");
+                        response.sendRedirect("Hod_ChangePassword.jsp");
                     }
                 }
             } catch (Exception e) {
                 try {
                     c1.close();
                     session.setAttribute("status", "failed");
-                    response.sendRedirect("Department_ChangePassword.jsp");
+                    response.sendRedirect("Hod_ChangePassword.jsp");
                 } catch (SQLException ex) {
                     Logger.getLogger(DeptChangepass.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -94,7 +93,6 @@ public class DeptChangepass extends HttpServlet {
                 Logger.getLogger(RegisterStudent.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

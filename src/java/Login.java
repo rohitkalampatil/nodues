@@ -23,29 +23,30 @@ public class Login extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-           HttpSession s1 = request.getSession(true);
-            s1.setAttribute("department", null);
             
-            String department = request.getParameter("department");
+           HttpSession s1 = request.getSession(true);
+            s1.setAttribute("departmentName", null);
+            
+            String departmentName = request.getParameter("departmentName");
             String password = request.getParameter("password");
             Connection c1;
             
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseclearance", "root", "root");
-                PreparedStatement st = c1.prepareStatement("select password,departmentName from department where departmentName=?");
-                st.setString(1, department);
+                PreparedStatement st = c1.prepareStatement("select * from department where departmentName=?;");
+                st.setString(1, departmentName);
 
                 ResultSet r = st.executeQuery();
                 if (r.next()) {
                     if (password.equals(r.getString("password"))) {
-                        s1.setAttribute("department", department);
+                        s1.setAttribute("departmentName", departmentName);
                         response.sendRedirect("Department_Dashboard.jsp");
 
                     } else {
 
                         s1.setAttribute("error", "Invalid Password");
-                        s1.setAttribute("departmentName", department);
+                        s1.setAttribute("departmentName", departmentName);
                         response.sendRedirect("Department_Login.jsp");
                     }
                 } else {
