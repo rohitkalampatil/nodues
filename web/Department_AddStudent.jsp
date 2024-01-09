@@ -188,10 +188,10 @@
             function alertNamefun() {
             var status = '<%= session.getAttribute("status")%>';
                 if (status === "success") {
-                    alert("Student Added");
+                    alert("Student Added..\nUser Id and Password Sent to Email.");
                 }
                 if (status === "failed") {
-                    alert("Failed to add Student");
+                    alert("Failed to send mail to Student");
                 }
             }
         </script>

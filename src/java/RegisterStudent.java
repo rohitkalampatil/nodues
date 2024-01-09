@@ -1,30 +1,37 @@
 
+import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+//import javax.mail.*;
+//import javax.mail.internet.InternetAddress;
+//import javax.mail.internet.MimeMessage;
+//import java.util.Properties;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
 
 @WebServlet(urlPatterns = {"/RegisterStudent"})
 public class RegisterStudent extends HttpServlet {
+
+    private Connection c1 = null;
+    private PreparedStatement statement = null;
+    private HttpSession s1 = null;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-
-            Connection c1 = null;
-
+            databaseConnection();
             String department = request.getParameter("department");
             String year = request.getParameter("year");
             String sName = request.getParameter("name");
@@ -36,9 +43,7 @@ public class RegisterStudent extends HttpServlet {
             String password = generatePassword(sName, prn);
 
             try {
-                Class.forName("com.mysql.jdbc.Driver");
-                c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseClearance", "root", "root");
-                PreparedStatement statement = c1.prepareStatement("insert into students values(?,?,?,?,?,?,?,?)");
+                statement = c1.prepareStatement("insert into students values(?,?,?,?,?,?,?,?)");
                 statement.setString(1, sName);
                 statement.setLong(2, prn);
                 statement.setString(3, department);
@@ -49,30 +54,71 @@ public class RegisterStudent extends HttpServlet {
                 statement.setString(8, password);
 
                 int r = statement.executeUpdate();
+                // send mail to students emailid
+                //sendEmail(email, prn, password);
                 if (r > 0) {
-
-                    c1.close();
                     // using session 
-                    HttpSession s1 = request.getSession(true);
+                    s1 = request.getSession(true);
                     s1.setAttribute("status", "success");
                     response.sendRedirect("Department_AddStudent.jsp");
                 }
+            } catch (IOException | SQLException e) {
 
-                c1.close();
-            } catch (Exception e) {
+            } finally {
                 try {
-                    c1.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(RegisterStudent.class.getName()).log(Level.SEVERE, null, ex);
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if (c1 != null) {
+                        c1.close();
+                    }
+                } catch (SQLException e) {
                 }
-                out.print(e);
             }
 
         }
 
     }
 
-    protected String generatePassword(String sName, Long prn) {
+//    private void sendEmail(String toEmail, Long prnid, String password) {
+//        // Your email configuration
+//        String fromEmail = "rohitkalam228@gmail.com";
+//        String emailPassword = "rohit0905";
+//
+//        // Set up the properties for the mail server
+//        Properties properties = new Properties();
+//        properties.put("mail.smtp.auth", "true");
+//        properties.put("mail.smtp.starttls.enable", "true");
+//        properties.put("mail.smtp.host", "smtp.gmail.com");
+//        properties.put("mail.smtp.port", "587");
+//
+//        // Create a session with the email credentials
+//        Session session = Session.getInstance(properties, new Authenticator() {
+//            @Override
+//            protected PasswordAuthentication getPasswordAuthentication() {
+//                return new PasswordAuthentication(fromEmail, emailPassword);
+//            }
+//        });
+//
+//        try {
+//            // Create a message
+//            Message message = new MimeMessage(session);
+//            message.setFrom(new InternetAddress(fromEmail));
+//            message.setRecipient(Message.RecipientType.TO, new InternetAddress("rohitkalam96k@gmail.com"));
+//            message.setSubject("Your Account Information");
+//            message.setText("Hello,\n\nYour PRNID: " + prnid + "\nPassword: " + password);
+//
+//            // Send the message
+//            Transport.send(message);
+//
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//            // Handle email sending failure, log or throw an exception as needed
+//
+//        }
+//    }
+
+    private String generatePassword(String sName, Long prn) {
         String Prn = "" + prn;
         String namePart = sName.substring(0, Math.min(sName.length(), 4));
 
@@ -85,6 +131,18 @@ public class RegisterStudent extends HttpServlet {
             prnPart = Prn;
         }
         return namePart + prnPart;
+    }
+
+    private void databaseConnection() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            c1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/noduseClearance", "root", "root");
+
+        } catch (ClassNotFoundException | SQLException e) {
+
+        } finally {
+
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
